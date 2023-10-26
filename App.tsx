@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
-import SearchBar from './SearchBar';
+import SearchBar from './routes/SearchBar';
 import CustomPopup from './CustomPopUp';
 const DATA = Array.from(Array(20), (_, index) => ({
   id: index.toString(),
@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     },
   title: {
     fontSize: 20,
-    color: 'black',
+    color: 'grey',
   },
   text: {
      fontSize: 14,
-     color: 'black',
+     color: 'grey',
     },
   expertDescription: {
      alignItems: 'center',

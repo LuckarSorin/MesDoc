@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
       borderColor: '#BDCBF3',
   },
   close: {
+
      paddingTop: 30,
   },
   dropDownStyle: {
