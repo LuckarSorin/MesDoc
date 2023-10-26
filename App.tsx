@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   itemContent: {
-      backgroundColor: '#D2DDFA',
+      backgroundColor: 'white',
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   expertDescriptionText: {
      textAlign: 'center',
-     backgroundColor: '#D2DDFA',
+     backgroundColor: 'white',
      padding: 20,
      fontSize: 14,
      marginVertical: 8,
