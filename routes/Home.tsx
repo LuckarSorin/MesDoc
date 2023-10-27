@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
+import axios from 'axios';
+
 const DATA = Array.from(Array(20), (_, index) => ({
   id: index.toString(),
   title: `Médicament : ${index}`,
   text: `200mg, comprimé`,
   image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjPSmm6Ul-xTVabVGyjeFS1MwfTsGYoW7hw&usqp=CAU'
 }));
-const DataDoc ={
+const DataDoc = {
   "specialiste": "Chirurgien orthopédique",
   "description": "Les chirurgiens orthopédiques sont des spécialistes qui traitent les problèmes liés au système musculo-squelettique, y compris les symptômes de mal de dos."
 }
 
-function Home({ navigation }) {
+
+const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
+  const [medoc, setMedoc] = useState();
+
+  useEffect(() => {
+    const fetchMedoc = async () => {
+      try {
+        const response = await axios.get('http://10.49.35.219:3000/api/v1/medicaments').then((response) => {
+        console.log(response.data.data[0].denomination);
+        setMedoc(response.data.data[0].denomination)
+        });
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+    fetchMedoc();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Register')}>
@@ -22,11 +41,11 @@ function Home({ navigation }) {
       </TouchableOpacity>
       <CustomPopup visible={modalVisible} onClose={() => setModalVisible(false)} />
       <View style={styles.sectionTitle}>
-        <Text style={styles.titleText}>Bienvenue</Text>
+        <Text style={styles.titleText}>{medoc}</Text>
       </View>
       <SearchBar />
       <View style={styles.expertDescription}>
-      <Text style={styles.expertDescriptionTitle}>{DataDoc.specialiste}</Text>
+        <Text style={styles.expertDescriptionTitle}>{DataDoc.specialiste}</Text>
         <Text style={styles.expertDescriptionText}>{DataDoc.description}</Text>
       </View>
       <FlatList
@@ -44,7 +63,6 @@ function Home({ navigation }) {
           </TouchableOpacity>
         )}
       />
-
     </SafeAreaView>
   );
 };
