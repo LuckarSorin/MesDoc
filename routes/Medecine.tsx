@@ -2,29 +2,33 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
 
 
-function Medecine({ navigation }) {
+function Medecine({ route }) {
+  const { item } = route.params;
+  console.log(item)
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView >
         <View style={styles.intro}>
-          <Text style={styles.title}>Medicament</Text>
-          <Text style={styles.text}>100mg, comprimé</Text>
+          <Text style={styles.bigTitle}>{item.denomination}</Text>
+          <Text style={styles.text}>{item.quantité == ""?  "" : item.quantité+"," } {item.forme_pharmacetique}</Text>
         </View>
         <View style={styles.Description}>
-          <Text style={styles.DescriptionText}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+          <Text style={styles.title}>Description</Text>
+          <Text style={styles.DescriptionText}>{item.description}</Text>
         </View>
         <View style={styles.Description}>
-          <Text style={styles.DescriptionText}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+          <Text style={styles.title}>Allergènes</Text>
+          {item.allergenes.map((allergene, index) => (
+            <Text style={styles.DescriptionText} key={index}>{"- "+allergene}</Text>
+          ))}
         </View>
         <View style={styles.Description}>
-          <Text style={styles.DescriptionText}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
+          <Text style={styles.title}>Contre indication</Text>
+          {item.contre_indication.map((contreIndication, index) => (
+            <Text style={styles.DescriptionText} key={index}>{"- "+contreIndication}</Text>
+          ))}
         </View>
-        <View style={styles.Description}>
-          <Text style={styles.DescriptionText}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
-        </View>
-        <View style={styles.Description}>
-          <Text style={styles.DescriptionText}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</Text>
-        </View>
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -54,16 +58,21 @@ const styles = StyleSheet.create({
   },
   DescriptionText: {
     textAlign: 'center',
-    padding: 20,
-    fontSize: 14,
+    padding: 10,
+    fontSize: 16,
 
   },
+  bigTitle: {
+    fontWeight: 'bold',
+    fontSize: 26,
+    color: 'grey',
+  },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     color: 'grey',
   },
   text: {
-    fontSize: 14,
+    fontSize: 20,
     color: 'grey',
   },
 

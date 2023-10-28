@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
-import axios from 'axios';
+import {fetchMedoc} from './Api';
+
 
 const DATA = Array.from(Array(20), (_, index) => ({
   id: index.toString(),
@@ -21,18 +22,13 @@ const Home = ({ navigation }) => {
   const [medoc, setMedoc] = useState();
 
   useEffect(() => {
-    const fetchMedoc = async () => {
-      try {
-        const response = await axios.get('http://10.49.35.219:3000/api/v1/medicaments').then((response) => {
-        console.log(response.data.data[0].denomination);
-        setMedoc(response.data.data[0].denomination)
-        });
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
+    const fetchData = async () => {
+      const result = await fetchMedoc();
+      setMedoc(result);
     };
-    fetchMedoc();
+    fetchData();
   }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +37,7 @@ const Home = ({ navigation }) => {
       </TouchableOpacity>
       <CustomPopup visible={modalVisible} onClose={() => setModalVisible(false)} />
       <View style={styles.sectionTitle}>
-        <Text style={styles.titleText}>{medoc}</Text>
+        <Text style={styles.titleText}>Bienvenue</Text>
       </View>
       <SearchBar />
       <View style={styles.expertDescription}>
@@ -49,15 +45,16 @@ const Home = ({ navigation }) => {
         <Text style={styles.expertDescriptionText}>{DataDoc.description}</Text>
       </View>
       <FlatList
-        data={DATA}
-        keyExtractor={(item) => item.id}
+        style={{ flex: 1 }}
+        data={medoc}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('Medecine')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Medecine', { item: item })}>
             <View style={styles.itemContent}>
-              <Image source={{ uri: item.image }} style={styles.image} />
+              <Image source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjPSmm6Ul-xTVabVGyjeFS1MwfTsGYoW7hw&usqp=CAU" }} style={styles.image} />
               <View>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.text}>{item.text}</Text>
+                <Text style={styles.title}>{item.denomination}</Text>
+                <Text style={styles.text}>{item.quantité == ""?  "" : item.quantité+"," } {item.forme_pharmacetique} </Text>
               </View>
             </View>
           </TouchableOpacity>
