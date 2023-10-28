@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
   const [searchText, setSearchText] = useState('');
 
-  const handleSearch = (text) => {
-    setSearchText(text);
-    // Ajoutez ici votre logique de recherche en fonction de l'entrée de l'utilisateur.
+  const handleSearch = () => {
+    onSearch(searchText);
+  };
+
+  const onChange = (text) => {
+    if (typeof text === 'string') {
+      setSearchText(text);
+    }
   };
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Rechercher..."
-         placeholderTextColor="white"
+        placeholder="Entrer vos symptômes.."
+        placeholderTextColor="white"
         value={searchText}
-        onChangeText={handleSearch}
+        onChangeText={onChange}
+        onSubmitEditing={handleSearch}
       />
     </View>
   );
@@ -29,7 +35,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-
     width: 350,
     height: 40,
     borderWidth: 4,

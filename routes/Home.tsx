@@ -2,15 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
-import {fetchMedoc} from './Api';
+import {fetchMedoc, fetchMedecin} from './Api';
 
-
-const DATA = Array.from(Array(20), (_, index) => ({
-  id: index.toString(),
-  title: `Médicament : ${index}`,
-  text: `200mg, comprimé`,
-  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjPSmm6Ul-xTVabVGyjeFS1MwfTsGYoW7hw&usqp=CAU'
-}));
 const DataDoc = {
   "specialiste": "Chirurgien orthopédique",
   "description": "Les chirurgiens orthopédiques sont des spécialistes qui traitent les problèmes liés au système musculo-squelettique, y compris les symptômes de mal de dos."
@@ -20,7 +13,19 @@ const DataDoc = {
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
   const [medoc, setMedoc] = useState();
+  const [medecin, setMedecin] = useState();
+  const [showExpertDescription, setShowExpertDescription] = useState(false);
 
+  const handleSearch = async (text) => {
+    setShowExpertDescription(true);
+    const result = await fetchMedecin(text);
+    if (result && result.data && result.data.specialiste) {
+      setMedecin(result.data);
+      
+    }
+  };
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchMedoc();
@@ -28,7 +33,6 @@ const Home = ({ navigation }) => {
     };
     fetchData();
   }, []);
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,11 +43,13 @@ const Home = ({ navigation }) => {
       <View style={styles.sectionTitle}>
         <Text style={styles.titleText}>Bienvenue</Text>
       </View>
-      <SearchBar />
-      <View style={styles.expertDescription}>
-        <Text style={styles.expertDescriptionTitle}>{DataDoc.specialiste}</Text>
-        <Text style={styles.expertDescriptionText}>{DataDoc.description}</Text>
-      </View>
+      <SearchBar onSearch={handleSearch} />
+      {showExpertDescription &&  (
+        <View style={styles.expertDescription}>
+          <Text style={styles.expertDescriptionTitle}>{DataDoc.specialiste}</Text>
+          <Text style={styles.expertDescriptionText}>{DataDoc.description}</Text>
+        </View>
+      )}
       <FlatList
         style={{ flex: 1 }}
         data={medoc}
