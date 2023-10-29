@@ -14,7 +14,7 @@ export const fetchMedoc = async () => {
 export const fetchMedecin = async (texte) => {
     try {
       const response = await axios.get(`http://192.168.0.104:3000/api/v1/medecin?texte=${texte}`);
-      //console.log("reponse api : "+JSON.stringify(response.data.data));
+      console.log("reponse api : "+JSON.stringify(response.data.data));
       return response.data.data
     } catch (error) {
       console.error('Error fetching data: ', error);

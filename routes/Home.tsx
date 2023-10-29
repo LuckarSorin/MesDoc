@@ -13,16 +13,14 @@ const DataDoc = {
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
   const [medoc, setMedoc] = useState();
-  const [medecin, setMedecin] = useState();
+  const [medecin, setMedecin] = useState<any>({})
   const [showExpertDescription, setShowExpertDescription] = useState(false);
 
   const handleSearch = async (text) => {
     setShowExpertDescription(true);
     const result = await fetchMedecin(text);
-    if (result && result.data && result.data.specialiste) {
-      setMedecin(result.data);
-      
-    }
+    setMedecin(result)
+    console.log(result)
   };
   
   
@@ -44,10 +42,10 @@ const Home = ({ navigation }) => {
         <Text style={styles.titleText}>Bienvenue</Text>
       </View>
       <SearchBar onSearch={handleSearch} />
-      {showExpertDescription &&  (
+      {showExpertDescription && medecin!=null && (
         <View style={styles.expertDescription}>
-          <Text style={styles.expertDescriptionTitle}>{DataDoc.specialiste}</Text>
-          <Text style={styles.expertDescriptionText}>{DataDoc.description}</Text>
+          <Text style={styles.expertDescriptionTitle}>{(medecin.specialiste)? medecin.specialiste : "Chargement..."}</Text>
+          <Text style={styles.expertDescriptionText}>{(medecin.description)? medecin.description : "Chargement..."}</Text>
         </View>
       )}
       <FlatList
