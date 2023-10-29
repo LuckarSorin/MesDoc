@@ -8,6 +8,7 @@ import Medecine from './routes/Medecine'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { enableScreens } from 'react-native-screens';
+import DoctorList from './routes/DoctorList';
 
 const Stack = createStackNavigator();
 enableScreens();
@@ -35,6 +36,14 @@ const App = () => {
           <Stack.Screen name="Medecine" component={Medecine}
             options={{
               title: 'Mon médicament',
+              headerStyle: {
+                backgroundColor: '#BDCBF3',
+              },
+              headerTitleAlign: 'center',
+            }} />
+            <Stack.Screen name="DoctorList" component={DoctorList}
+            options={{
+              title: 'Liste des spécialites',
               headerStyle: {
                 backgroundColor: '#BDCBF3',
               },

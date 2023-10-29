@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
-import {fetchMedoc, fetchMedecin} from './Api';
+import { fetchMedoc, fetchMedecin } from './Api';
+
 
 const DataDoc = {
   "specialiste": "Chirurgien orthopédique",
   "description": "Les chirurgiens orthopédiques sont des spécialistes qui traitent les problèmes liés au système musculo-squelettique, y compris les symptômes de mal de dos."
 }
+
+
 
 
 const Home = ({ navigation }) => {
@@ -22,8 +25,8 @@ const Home = ({ navigation }) => {
     setMedecin(result)
     console.log(result)
   };
-  
-  
+
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchMedoc();
@@ -42,12 +45,15 @@ const Home = ({ navigation }) => {
         <Text style={styles.titleText}>Bienvenue</Text>
       </View>
       <SearchBar onSearch={handleSearch} />
-      {showExpertDescription && medecin!=null && (
-        <View style={styles.expertDescription}>
-          <Text style={styles.expertDescriptionTitle}>{(medecin.specialiste)? medecin.specialiste : "Chargement..."}</Text>
-          <Text style={styles.expertDescriptionText}>{(medecin.description)? medecin.description : "Chargement..."}</Text>
-        </View>
-      )}
+      {showExpertDescription && medecin != null && (
+        <TouchableOpacity onPress={() => navigation.navigate('DoctorList', { texte: medecin.specialiste })}>
+          <View style={styles.expertDescription}>
+            <Text style={styles.expertDescriptionTitle}>{(medecin.specialiste) ? "Spécialiste recommandé : \n" + medecin.specialiste : "Chargement..."}</Text>
+            <Text style={styles.expertDescriptionText}>{(medecin.description) ? medecin.description : "Chargement..."}</Text>
+          </View>
+        </TouchableOpacity>
+      )
+      }
       <FlatList
         style={{ flex: 1 }}
         data={medoc}
@@ -58,13 +64,13 @@ const Home = ({ navigation }) => {
               <Image source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjPSmm6Ul-xTVabVGyjeFS1MwfTsGYoW7hw&usqp=CAU" }} style={styles.image} />
               <View>
                 <Text style={styles.title}>{item.denomination}</Text>
-                <Text style={styles.text}>{item.quantité == ""?  "" : item.quantité+"," } {item.forme_pharmacetique} </Text>
+                <Text style={styles.text}>{item.quantité == "" ? "" : item.quantité + ","} {item.forme_pharmacetique} </Text>
               </View>
             </View>
           </TouchableOpacity>
         )}
       />
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 

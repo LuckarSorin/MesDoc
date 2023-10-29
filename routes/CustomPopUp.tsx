@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, Button, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomPopup = ({ visible, onClose }) => {
 
@@ -19,6 +20,26 @@ const [items2, setItems2] = useState([
   { label: 'Non', value: 'no' },
 ]);
 
+
+const storeData = async () => {
+  try {
+    await AsyncStorage.setItem('Allergies', searchText);
+    await AsyncStorage.setItem('traitements', searchText2);
+  } catch (e) {
+    console.error(e)
+  }
+};
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('Allergies');
+    if (value !== null) {
+      // value previously stored
+      console.log(value)
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
 const handleSearch = (text) => {
     setSearchText(text);
     // Ajoutez ici votre logique de recherche en fonction de l'entrée de l'utilisateur.
@@ -60,6 +81,7 @@ const handleSearch2 = (text) => {
                              placeholderTextColor="grey"
                              value={searchText}
                              onChangeText={handleSearch}
+                             onSubmitEditing={storeData}
                            />
                          )}</View>
 
@@ -87,6 +109,7 @@ const handleSearch2 = (text) => {
                                        placeholderTextColor="grey"
                                        value={searchText2}
                                        onChangeText={handleSearch2}
+                                       onSubmitEditing={storeData}
                                      />
                                    )}
           </View>
