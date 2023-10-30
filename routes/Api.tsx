@@ -11,9 +11,9 @@ export const fetchMedoc = async () => {
   }
 };
 
-export const fetchMedicamentList = async (liste, symptome) => {
+export const fetchMedicamentList = async (liste, symptome, allergie) => {
   try {
-    const response = await axios.get(`http://10.49.35.219:3000/api/v1/medicamentlist?liste=${liste}&symptome=${symptome}`);
+    const response = await axios.get(`http://10.49.35.219:3000/api/v1/medicamentlist?liste=${liste}&symptome=${symptome}&allergie=${allergie}`);
     console.log("reponse api : "+typeof(response.data.liste) +" "+ response.data.liste[0]);
     return response.data.liste
   } catch (error) {

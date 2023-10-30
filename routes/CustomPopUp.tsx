@@ -3,6 +3,18 @@ import { View, Text, Modal, StyleSheet, Button, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('Allergies');
+    if (value !== null || value !="" || value !=" ") {
+      // value previously stored
+      console.log(value)
+      return value;
+    }
+  } catch (e) {
+    console.error(e)
+  }
+};
 const CustomPopup = ({ visible, onClose }) => {
 
 const [searchText, setSearchText] = useState('');
@@ -20,26 +32,26 @@ const [items2, setItems2] = useState([
   { label: 'Non', value: 'no' },
 ]);
 
-
 const storeData = async () => {
   try {
-    await AsyncStorage.setItem('Allergies', searchText);
-    await AsyncStorage.setItem('traitements', searchText2);
+    if (value == "no"){
+      await AsyncStorage.setItem('Allergies', "a rien");
+      await AsyncStorage.setItem('traitements', value2);
+    }else{
+      await AsyncStorage.setItem('Allergies', searchText);
+     await AsyncStorage.setItem('traitements', searchText2);
+    }
   } catch (e) {
     console.error(e)
   }
 };
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('Allergies');
-    if (value !== null) {
-      // value previously stored
-      console.log(value)
-    }
-  } catch (e) {
-    // error reading value
-  }
+
+const onPressClose = () => {
+  storeData();
+  getData();
+  onClose();
 };
+
 const handleSearch = (text) => {
     setSearchText(text);
     // Ajoutez ici votre logique de recherche en fonction de l'entrée de l'utilisateur.
@@ -115,7 +127,7 @@ const handleSearch2 = (text) => {
           </View>
           </View>
           <View style={styles.close}>
-             <Button title="Sauvegarder" onPress={onClose} />
+             <Button title="Sauvegarder" onPress={onPressClose} />
           </View>
         </View>
       </View>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
-import { fetchMedoc, fetchMedecin,fetchMedicamentList } from './Api';
+import { fetchMedoc, fetchMedecin, fetchMedicamentList } from './Api';
+import { getData } from './CustomPopUp';
 
 
 const DataDoc = {
@@ -21,18 +22,24 @@ const Home = ({ navigation }) => {
   const [showExpertDescription, setShowExpertDescription] = useState(false);
 
   const listMedicaments = () => {
-    const denominations = medoc.map((item) => item.denomination);
-    console.log(denominations)
-  return denominations.join(", ");
+    const result = medoc.map((item) => {
+      return {
+        denomination: item.denomination,
+        allergenes: item.allergenes
+      };
+    });
+    console.log(result)
+    return result;
   }
+
 
   const filterCommonMedicaments = (medoc, liste) => {
     const result = [];
-    console.log('ok')
+
     for (let i = 0; i < medoc.length; i++) {
-      console.log('ok2')
+
       for (let j = 0; j < liste.length; j++) {
-        console.log(liste[j]+ "  " + medoc[i].denomination)
+
         if (medoc[i].denomination == liste[j]) {
           result.push(medoc[i]);
         }
@@ -47,14 +54,15 @@ const Home = ({ navigation }) => {
       const result = await fetchMedecin(text);
       setMedecin(result);
       const liste = listMedicaments();
-      const listMedicament = await fetchMedicamentList(liste, text);
-      console.log(filterCommonMedicaments(medoc, listMedicament));
+      const allergie = getData();
+      const listMedicament = await fetchMedicamentList(liste, text, allergie);
+      
       setMedocShow(filterCommonMedicaments(medoc, listMedicament));
     } else {
       setMedocShow(medoc);
     }
   };
-  
+
 
 
   useEffect(() => {
@@ -80,7 +88,7 @@ const Home = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('DoctorList', { texte: medecin.specialiste })}>
           <View style={styles.expertDescription}>
             <Text style={styles.expertDescriptionTitle}>{(medecin.specialiste) ? "Spécialiste recommandé : \n" + medecin.specialiste : "Chargement..."}</Text>
-            <Text style={styles.expertDescriptionText}>{(medecin.description) ? medecin.description : "Chargement..."}</Text>
+            <Text style={styles.expertDescriptionText}>{(medecin.description) ? medecin.description : <ActivityIndicator size="large" color="#BDCBF3" />}</Text>
           </View>
         </TouchableOpacity>
       )
