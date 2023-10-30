@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
 import SearchBar from './SearchBar';
 import CustomPopup from './CustomPopUp';
-import { fetchMedoc, fetchMedecin } from './Api';
+import { fetchMedoc, fetchMedecin,fetchMedicamentList } from './Api';
 
 
 const DataDoc = {
@@ -15,22 +15,53 @@ const DataDoc = {
 
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [medoc, setMedoc] = useState();
+  const [medoc, setMedoc] = useState<any>({})
+  const [medocShow, setMedocShow] = useState<any>({})
   const [medecin, setMedecin] = useState<any>({})
   const [showExpertDescription, setShowExpertDescription] = useState(false);
 
-  const handleSearch = async (text) => {
-    setShowExpertDescription(true);
-    const result = await fetchMedecin(text);
-    setMedecin(result)
-    console.log(result)
+  const listMedicaments = () => {
+    const denominations = medoc.map((item) => item.denomination);
+    console.log(denominations)
+  return denominations.join(", ");
+  }
+
+  const filterCommonMedicaments = (medoc, liste) => {
+    const result = [];
+    console.log('ok')
+    for (let i = 0; i < medoc.length; i++) {
+      console.log('ok2')
+      for (let j = 0; j < liste.length; j++) {
+        console.log(liste[j]+ "  " + medoc[i].denomination)
+        if (medoc[i].denomination == liste[j]) {
+          result.push(medoc[i]);
+        }
+      }
+    }
+    return result;
   };
+
+  const handleSearch = async (text) => {
+    if (text != "" && text != "" && text != null) {
+      setShowExpertDescription(true);
+      const result = await fetchMedecin(text);
+      setMedecin(result);
+      const liste = listMedicaments();
+      const listMedicament = await fetchMedicamentList(liste, text);
+      console.log(filterCommonMedicaments(medoc, listMedicament));
+      setMedocShow(filterCommonMedicaments(medoc, listMedicament));
+    } else {
+      setMedocShow(medoc);
+    }
+  };
+  
 
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchMedoc();
       setMedoc(result);
+      setMedocShow(result);
     };
     fetchData();
   }, []);
@@ -56,7 +87,7 @@ const Home = ({ navigation }) => {
       }
       <FlatList
         style={{ flex: 1 }}
-        data={medoc}
+        data={medocShow}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.navigate('Medecine', { item: item })}>
